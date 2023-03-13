@@ -1,4 +1,10 @@
-import { ButtonGroup, Button, Typography } from "@mui/material";
+import {
+  ButtonGroup,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+} from "@mui/material";
 import { useState } from "react";
 
 function App() {
@@ -67,6 +73,28 @@ function App() {
     }
   };
 
+  const displayWin = () => {
+    if (win) {
+      return (
+        <Card
+          variant="outlined"
+          m={5}
+          sx={{
+            minWidth: 275,
+            marginTop: 5,
+            backgroundColor: "red",
+            borderRadius: "50%",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h5" m={5}>
+              {youWin}
+            </Typography>
+          </CardContent>
+        </Card>
+      );
+    }
+  };
   return (
     <div className="App">
       <Typography variant="h2" mb={4}>
@@ -147,9 +175,7 @@ function App() {
           {grid.box9}
         </Button>
       </ButtonGroup>
-      <Typography variant="h5" m={5}>
-        {youWin}
-      </Typography>
+      {displayWin()}
     </div>
   );
 }
