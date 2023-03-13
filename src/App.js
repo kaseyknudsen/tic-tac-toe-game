@@ -3,6 +3,8 @@ import { useState } from "react";
 
 function App() {
   let [counter, setCounter] = useState(0);
+  const [win, setWin] = useState(false);
+  const [youWin, setYouWin] = useState("");
   const [grid, setGrid] = useState({
     box1: "",
     box2: "",
@@ -19,7 +21,50 @@ function App() {
     let letter;
     setCounter(counter + 1);
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
+    checkWin();
     return letter;
+  };
+
+  const checkWin = () => {
+    //rows
+    if (grid.box1 === "X" && grid.box2 === "X" && grid.box3 === "X") {
+      setWin(true);
+    } else if (grid.box1 === "O" && grid.box2 === "O" && grid.box3 === "O") {
+      setWin(true);
+    } else if (grid.box4 === "X" && grid.box5 === "X" && grid.box6 === "X") {
+      setWin(true);
+    } else if (grid.box4 === "O" && grid.box5 === "O" && grid.box6 === "O") {
+      setWin(true);
+    } else if (grid.box7 === "X" && grid.box8 === "X" && grid.box9 === "X") {
+      setWin(true);
+    } else if (grid.box7 === "O" && grid.box8 === "O" && grid.box9 === "O") {
+      setWin(true);
+    } //columns
+    else if (grid.box1 === "X" && grid.box4 === "X" && grid.box7 === "X") {
+      setWin(true);
+    } else if (grid.box1 === "O" && grid.box4 === "O" && grid.box7 === "O") {
+      setWin(true);
+    } else if (grid.box2 === "X" && grid.box5 === "X" && grid.box8 === "X") {
+      setWin(true);
+    } else if (grid.box2 === "O" && grid.box5 === "O" && grid.box8 === "O") {
+      setWin(true);
+    } else if (grid.box3 === "X" && grid.box6 === "X" && grid.box9 === "X") {
+      setWin(true);
+    } else if (grid.box3 === "O" && grid.box6 === "O" && grid.box9 === "O") {
+      setWin(true);
+    } //diagonal
+    else if (grid.box1 === "X" && grid.box5 === "X" && grid.box9 === "X") {
+      setWin(true);
+    } else if (grid.box1 === "O" && grid.box5 === "O" && grid.box9 === "O") {
+      setWin(true);
+    } else if (grid.box3 === "X" && grid.box5 === "X" && grid.box7 === "X") {
+      setWin(true);
+    } else if (grid.box3 === "O" && grid.box5 === "O" && grid.box7 === "O") {
+      setWin(true);
+    }
+    if (win) {
+      setYouWin("You Win!");
+    }
   };
 
   return (
@@ -102,8 +147,13 @@ function App() {
           {grid.box9}
         </Button>
       </ButtonGroup>
+      <Typography variant="h5" m={5}>
+        {youWin}
+      </Typography>
     </div>
   );
 }
 
 export default App;
+
+/* if box1 === X && box2 === X && box3 === X || box1 === O && box2 === O && box3 === O, you win */
