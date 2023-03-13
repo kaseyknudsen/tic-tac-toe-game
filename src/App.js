@@ -80,14 +80,14 @@ function App() {
           variant="outlined"
           m={5}
           sx={{
-            minWidth: 275,
+            minWidth: 100,
             marginTop: 5,
-            backgroundColor: "red",
-            borderRadius: "50%",
+            backgroundColor: "green",
+            borderRadius: "5%",
           }}
         >
           <CardContent>
-            <Typography variant="h5" m={5}>
+            <Typography variant="h4" m={5}>
               {youWin}
             </Typography>
           </CardContent>
@@ -182,4 +182,3 @@ function App() {
 
 export default App;
 
-/* if box1 === X && box2 === X && box3 === X || box1 === O && box2 === O && box3 === O, you win */
