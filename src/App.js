@@ -10,7 +10,7 @@ import { useState } from "react";
 function App() {
   let [counter, setCounter] = useState(0);
   const [win, setWin] = useState(false);
-  const [youWin, setYouWin] = useState("");
+  const [displayYouWin, setDisplayYouWin] = useState("");
   const [grid, setGrid] = useState({
     box1: "",
     box2: "",
@@ -27,50 +27,51 @@ function App() {
     let letter;
     setCounter(counter + 1);
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
-    checkWin();
+    checkWin()
     return letter;
   };
 
   const checkWin = () => {
     //rows
-    if (grid.box1 === "X" && grid.box2 === "X" && grid.box3 === "X") {
-      setWin(true);
-    } else if (grid.box1 === "O" && grid.box2 === "O" && grid.box3 === "O") {
-      setWin(true);
-    } else if (grid.box4 === "X" && grid.box5 === "X" && grid.box6 === "X") {
-      setWin(true);
-    } else if (grid.box4 === "O" && grid.box5 === "O" && grid.box6 === "O") {
-      setWin(true);
-    } else if (grid.box7 === "X" && grid.box8 === "X" && grid.box9 === "X") {
-      setWin(true);
-    } else if (grid.box7 === "O" && grid.box8 === "O" && grid.box9 === "O") {
-      setWin(true);
-    } //columns
-    else if (grid.box1 === "X" && grid.box4 === "X" && grid.box7 === "X") {
-      setWin(true);
-    } else if (grid.box1 === "O" && grid.box4 === "O" && grid.box7 === "O") {
-      setWin(true);
-    } else if (grid.box2 === "X" && grid.box5 === "X" && grid.box8 === "X") {
-      setWin(true);
-    } else if (grid.box2 === "O" && grid.box5 === "O" && grid.box8 === "O") {
-      setWin(true);
-    } else if (grid.box3 === "X" && grid.box6 === "X" && grid.box9 === "X") {
-      setWin(true);
-    } else if (grid.box3 === "O" && grid.box6 === "O" && grid.box9 === "O") {
-      setWin(true);
-    } //diagonal
-    else if (grid.box1 === "X" && grid.box5 === "X" && grid.box9 === "X") {
-      setWin(true);
-    } else if (grid.box1 === "O" && grid.box5 === "O" && grid.box9 === "O") {
-      setWin(true);
-    } else if (grid.box3 === "X" && grid.box5 === "X" && grid.box7 === "X") {
-      setWin(true);
-    } else if (grid.box3 === "O" && grid.box5 === "O" && grid.box7 === "O") {
-      setWin(true);
+    switch (true) {
+      case (grid.box1 === "X" && grid.box2 === "X" && grid.box3 === "X") ||
+        (grid.box1 === "O" && grid.box2 === "O" && grid.box3 === "O"):
+        setWin(true);
+        break;
+      case (grid.box4 === "X" && grid.box5 === "X" && grid.box6 === "X") ||
+        (grid.box4 === "O" && grid.box5 === "O" && grid.box6 === "O"):
+        setWin(true);
+        break;
+      case (grid.box7 === "X" && grid.box8 === "X" && grid.box9 === "X") ||
+        (grid.box7 === "O" && grid.box8 === "O" && grid.box9 === "O"):
+        setWin(true);
+        break;
+      //columns
+      case (grid.box1 === "X" && grid.box4 === "X" && grid.box7 === "X") ||
+        (grid.box1 === "O" && grid.box4 === "O" && grid.box7 === "O"):
+        setWin(true);
+        break;
+      case (grid.box2 === "X" && grid.box5 === "X" && grid.box8 === "X") ||
+        (grid.box2 === "O" && grid.box5 === "O" && grid.box8 === "O"):
+        setWin(true);
+        break;
+      case (grid.box3 === "X" && grid.box6 === "X" && grid.box9 === "X") ||
+        (grid.box3 === "O" && grid.box6 === "O" && grid.box9 === "O"):
+        setWin(true);
+        break;
+      //diagonal
+      case (grid.box1 === "X" && grid.box5 === "X" && grid.box9 === "X") ||
+        (grid.box1 === "O" && grid.box5 === "O" && grid.box9 === "O"):
+        setWin(true);
+        break;
+      case (grid.box3 === "X" && grid.box5 === "X" && grid.box7 === "X") ||
+        (grid.box3 === "O" && grid.box5 === "O" && grid.box7 === "O"):
+        setWin(true);
+        break;
+      default:
+        setDisplayYouWin("You loose!");
     }
-    if (win) {
-      setYouWin("You Win!");
-    }
+    win ? setDisplayYouWin("You Win!") : setDisplayYouWin(null);
   };
 
   const displayWin = () => {
@@ -87,8 +88,8 @@ function App() {
           }}
         >
           <CardContent>
-            <Typography variant="h4" m={5}>
-              {youWin}
+            <Typography variant="h5" m={5}>
+              {displayYouWin}
             </Typography>
           </CardContent>
         </Card>
@@ -182,3 +183,48 @@ function App() {
 
 export default App;
 
+/* questions
+1) how do i make it so that the user can't change the boxes once they've clicked
+2) why is setWin not updating as soon as there are 3 in a row. It's updating on the next one.
+3) how to clear the board once setWin is true
+4) why is the You Win box not showing up immediately with the text? */
+
+// const checkWin = () => {
+//   //rows
+//   if (grid.box1 === "X" && grid.box2 === "X" && grid.box3 === "X") {
+//     setWin(true);
+//   } else if (grid.box1 === "O" && grid.box2 === "O" && grid.box3 === "O") {
+//     setWin(true);
+//   } else if (grid.box4 === "X" && grid.box5 === "X" && grid.box6 === "X") {
+//     setWin(true);
+//   } else if (grid.box4 === "O" && grid.box5 === "O" && grid.box6 === "O") {
+//     setWin(true);
+//   } else if (grid.box7 === "X" && grid.box8 === "X" && grid.box9 === "X") {
+//     setWin(true);
+//   } else if (grid.box7 === "O" && grid.box8 === "O" && grid.box9 === "O") {
+//     setWin(true);
+//   } //columns
+//   else if (grid.box1 === "X" && grid.box4 === "X" && grid.box7 === "X") {
+//     setWin(true);
+//   } else if (grid.box1 === "O" && grid.box4 === "O" && grid.box7 === "O") {
+//     setWin(true);
+//   } else if (grid.box2 === "X" && grid.box5 === "X" && grid.box8 === "X") {
+//     setWin(true);
+//   } else if (grid.box2 === "O" && grid.box5 === "O" && grid.box8 === "O") {
+//     setWin(true);
+//   } else if (grid.box3 === "X" && grid.box6 === "X" && grid.box9 === "X") {
+//     setWin(true);
+//   } else if (grid.box3 === "O" && grid.box6 === "O" && grid.box9 === "O") {
+//     setWin(true);
+//   } //diagonal
+//   else if (grid.box1 === "X" && grid.box5 === "X" && grid.box9 === "X") {
+//     setWin(true);
+//   } else if (grid.box1 === "O" && grid.box5 === "O" && grid.box9 === "O") {
+//     setWin(true);
+//   } else if (grid.box3 === "X" && grid.box5 === "X" && grid.box7 === "X") {
+//     setWin(true);
+//   } else if (grid.box3 === "O" && grid.box5 === "O" && grid.box7 === "O") {
+//     setWin(true);
+//   }
+//   win ? setDisplayYouWin("You Win!") : setDisplayYouWin(null);
+// };
