@@ -8,11 +8,13 @@ import {
 import { useState } from "react";
 
 function App() {
-  let [counter, setCounter] = useState(0);
+  //create status state: playing, won, lost
+  const [counter, setCounter] = useState(0);
   const [win, setWin] = useState(false);
-  const [displayYouWin, setDisplayYouWin] = useState("");
   const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
 
+  //split into 2 functions: getLetter, updateCounter
+  //call both at the same level from updateGridAndCheckWin
   const updateAndGetLetter = () => {
     let letter;
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
@@ -24,6 +26,7 @@ function App() {
     if (grid[boxNumber] || win) {
       return;
     }
+    //make a helper function called updateArray and use it here. Put the function outside of the component
     const newGrid = [
       ...grid.slice(0, boxNumber),
       updateAndGetLetter(),
@@ -32,7 +35,7 @@ function App() {
     setGrid(newGrid);
     checkWin(newGrid);
   };
-
+  //refactor
   const checkWin = (newGrid) => {
     let isWin = false;
     //rows
@@ -75,7 +78,6 @@ function App() {
     }
     if (isWin) {
       setWin(true);
-      setDisplayYouWin("You Win!");
     }
   };
 
@@ -94,7 +96,7 @@ function App() {
         >
           <CardContent>
             <Typography variant="h5" m={5}>
-              {displayYouWin}
+              {"You Win!"}
             </Typography>
           </CardContent>
         </Card>
