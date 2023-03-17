@@ -11,67 +11,72 @@ function App() {
   let [counter, setCounter] = useState(0);
   const [win, setWin] = useState(false);
   const [displayYouWin, setDisplayYouWin] = useState("");
-  const [grid, setGrid] = useState({
-    box1: "",
-    box2: "",
-    box3: "",
-    box4: "",
-    box5: "",
-    box6: "",
-    box7: "",
-    box8: "",
-    box9: "",
-  });
+  const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
 
-  const updateBox = () => {
+  const updateAndGetLetter = () => {
     let letter;
-    setCounter(counter + 1);
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
-    checkWin()
+    setCounter(counter + 1);
     return letter;
   };
 
-  const checkWin = () => {
+  const updateGridAndCheckWin = (boxNumber) => {
+    if (grid[boxNumber] || win) {
+      return;
+    }
+    const newGrid = [
+      ...grid.slice(0, boxNumber),
+      updateAndGetLetter(),
+      ...grid.slice(boxNumber + 1),
+    ];
+    setGrid(newGrid);
+    checkWin(newGrid);
+  };
+
+  const checkWin = (newGrid) => {
+    let isWin = false;
     //rows
     switch (true) {
-      case (grid.box1 === "X" && grid.box2 === "X" && grid.box3 === "X") ||
-        (grid.box1 === "O" && grid.box2 === "O" && grid.box3 === "O"):
-        setWin(true);
+      case (newGrid[0] === "X" && newGrid[1] === "X" && newGrid[2] === "X") ||
+        (newGrid[0] === "O" && newGrid[1] === "O" && newGrid[2] === "O"):
+        isWin = true;
         break;
-      case (grid.box4 === "X" && grid.box5 === "X" && grid.box6 === "X") ||
-        (grid.box4 === "O" && grid.box5 === "O" && grid.box6 === "O"):
-        setWin(true);
+      case (newGrid[3] === "X" && newGrid[4] === "X" && newGrid[5] === "X") ||
+        (newGrid[3] === "O" && newGrid[4] === "O" && newGrid[5] === "O"):
+        isWin = true;
         break;
-      case (grid.box7 === "X" && grid.box8 === "X" && grid.box9 === "X") ||
-        (grid.box7 === "O" && grid.box8 === "O" && grid.box9 === "O"):
-        setWin(true);
+      case (newGrid[6] === "X" && newGrid[7] === "X" && newGrid[8] === "X") ||
+        (newGrid[6] === "O" && newGrid[7] === "O" && newGrid[8] === "O"):
+        isWin = true;
         break;
       //columns
-      case (grid.box1 === "X" && grid.box4 === "X" && grid.box7 === "X") ||
-        (grid.box1 === "O" && grid.box4 === "O" && grid.box7 === "O"):
-        setWin(true);
+      case (newGrid[0] === "X" && newGrid[3] === "X" && newGrid[6] === "X") ||
+        (newGrid[0] === "O" && newGrid[3] === "O" && newGrid[6] === "O"):
+        isWin = true;
         break;
-      case (grid.box2 === "X" && grid.box5 === "X" && grid.box8 === "X") ||
-        (grid.box2 === "O" && grid.box5 === "O" && grid.box8 === "O"):
-        setWin(true);
+      case (newGrid[1] === "X" && newGrid[4] === "X" && newGrid[7] === "X") ||
+        (newGrid[1] === "O" && newGrid[4] === "O" && newGrid[7] === "O"):
+        isWin = true;
         break;
-      case (grid.box3 === "X" && grid.box6 === "X" && grid.box9 === "X") ||
-        (grid.box3 === "O" && grid.box6 === "O" && grid.box9 === "O"):
-        setWin(true);
+      case (newGrid[2] === "X" && newGrid[5] === "X" && newGrid[8] === "X") ||
+        (newGrid[2] === "O" && newGrid[5] === "O" && newGrid[8] === "O"):
+        isWin = true;
         break;
       //diagonal
-      case (grid.box1 === "X" && grid.box5 === "X" && grid.box9 === "X") ||
-        (grid.box1 === "O" && grid.box5 === "O" && grid.box9 === "O"):
-        setWin(true);
+      case (newGrid[0] === "X" && newGrid[4] === "X" && newGrid[8] === "X") ||
+        (newGrid[0] === "O" && newGrid[4] === "O" && newGrid[8] === "O"):
+        isWin = true;
         break;
-      case (grid.box3 === "X" && grid.box5 === "X" && grid.box7 === "X") ||
-        (grid.box3 === "O" && grid.box5 === "O" && grid.box7 === "O"):
-        setWin(true);
+      case (newGrid[2] === "X" && newGrid[4] === "X" && newGrid[6] === "X") ||
+        (newGrid[2] === "O" && newGrid[4] === "O" && newGrid[6] === "O"):
+        isWin = true;
         break;
       default:
-        setDisplayYouWin("You loose!");
     }
-    win ? setDisplayYouWin("You Win!") : setDisplayYouWin(null);
+    if (isWin) {
+      setWin(true);
+      setDisplayYouWin("You Win!");
+    }
   };
 
   const displayWin = () => {
@@ -101,130 +106,29 @@ function App() {
       <Typography variant="h2" mb={4}>
         Tic Tac Toe
       </Typography>
-      <ButtonGroup
-        disableElevation
-        variant="contained"
-        color="info"
-        sx={{ columnGap: 1, marginBottom: 1 }}
-      >
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box1: updateBox() })}
+
+      {[
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+      ].map((nums) => (
+        <ButtonGroup
+          disableElevation
+          variant="contained"
+          color="info"
+          sx={{ columnGap: 1, marginBottom: 1 }}
         >
-          {grid.box1}
-        </Button>
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box2: updateBox() })}
-        >
-          {grid.box2}
-        </Button>
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box3: updateBox() })}
-        >
-          {grid.box3}
-        </Button>
-      </ButtonGroup>
-      <ButtonGroup
-        disableElevation
-        variant="contained"
-        color="info"
-        sx={{ columnGap: 1, marginBottom: 1 }}
-      >
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box4: updateBox() })}
-        >
-          {grid.box4}
-        </Button>
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box5: updateBox() })}
-        >
-          {grid.box5}
-        </Button>
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box6: updateBox() })}
-        >
-          {grid.box6}
-        </Button>
-      </ButtonGroup>
-      <ButtonGroup
-        disableElevation
-        variant="contained"
-        color="info"
-        sx={{ columnGap: 1 }}
-      >
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box7: updateBox() })}
-        >
-          {grid.box7}
-        </Button>
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box8: updateBox() })}
-        >
-          {grid.box8}
-        </Button>
-        <Button
-          sx={{ p: 3 }}
-          onClick={() => setGrid({ ...grid, box9: updateBox() })}
-        >
-          {grid.box9}
-        </Button>
-      </ButtonGroup>
+          {nums.map((num) => (
+            <Button sx={{ p: 3 }} onClick={() => updateGridAndCheckWin(num)}>
+              {grid[num]}
+            </Button>
+          ))}
+        </ButtonGroup>
+      ))}
+
       {displayWin()}
     </div>
   );
 }
 
 export default App;
-
-/* questions
-1) how do i make it so that the user can't change the boxes once they've clicked
-2) why is setWin not updating as soon as there are 3 in a row. It's updating on the next one.
-3) how to clear the board once setWin is true
-4) why is the You Win box not showing up immediately with the text? */
-
-// const checkWin = () => {
-//   //rows
-//   if (grid.box1 === "X" && grid.box2 === "X" && grid.box3 === "X") {
-//     setWin(true);
-//   } else if (grid.box1 === "O" && grid.box2 === "O" && grid.box3 === "O") {
-//     setWin(true);
-//   } else if (grid.box4 === "X" && grid.box5 === "X" && grid.box6 === "X") {
-//     setWin(true);
-//   } else if (grid.box4 === "O" && grid.box5 === "O" && grid.box6 === "O") {
-//     setWin(true);
-//   } else if (grid.box7 === "X" && grid.box8 === "X" && grid.box9 === "X") {
-//     setWin(true);
-//   } else if (grid.box7 === "O" && grid.box8 === "O" && grid.box9 === "O") {
-//     setWin(true);
-//   } //columns
-//   else if (grid.box1 === "X" && grid.box4 === "X" && grid.box7 === "X") {
-//     setWin(true);
-//   } else if (grid.box1 === "O" && grid.box4 === "O" && grid.box7 === "O") {
-//     setWin(true);
-//   } else if (grid.box2 === "X" && grid.box5 === "X" && grid.box8 === "X") {
-//     setWin(true);
-//   } else if (grid.box2 === "O" && grid.box5 === "O" && grid.box8 === "O") {
-//     setWin(true);
-//   } else if (grid.box3 === "X" && grid.box6 === "X" && grid.box9 === "X") {
-//     setWin(true);
-//   } else if (grid.box3 === "O" && grid.box6 === "O" && grid.box9 === "O") {
-//     setWin(true);
-//   } //diagonal
-//   else if (grid.box1 === "X" && grid.box5 === "X" && grid.box9 === "X") {
-//     setWin(true);
-//   } else if (grid.box1 === "O" && grid.box5 === "O" && grid.box9 === "O") {
-//     setWin(true);
-//   } else if (grid.box3 === "X" && grid.box5 === "X" && grid.box7 === "X") {
-//     setWin(true);
-//   } else if (grid.box3 === "O" && grid.box5 === "O" && grid.box7 === "O") {
-//     setWin(true);
-//   }
-//   win ? setDisplayYouWin("You Win!") : setDisplayYouWin(null);
-// };
