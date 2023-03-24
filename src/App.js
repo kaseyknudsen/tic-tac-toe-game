@@ -8,23 +8,26 @@ import {
 import { useState } from "react";
 
 function App() {
-  //create status state: playing, won, lost
   const [counter, setCounter] = useState(0);
-  const [win, setWin] = useState(false);
   const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
-  //const status = ["playing", "won", "lost"];
+  const [status, setStatus] = useState({
+    playing: false,
+    won: false,
+    lost: false,
+  });
+  const [attempts, setAttempts] = useState(1);
 
   //call both getLetter and updateCounter at the same level from updateGridAndCheckWin
   const getLetter = () => {
     let letter;
-    updateCounter()
+    updateCounter();
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
     return letter;
   };
 
   const updateCounter = () => {
-    setCounter(prevCount => prevCount + 1)
-  }
+    setCounter((prevCount) => prevCount + 1);
+  };
 
   const updateArray = (boxNumber) => {
     const newGrid = [
@@ -32,14 +35,14 @@ function App() {
       getLetter(),
       ...grid.slice(boxNumber + 1),
     ];
-    return newGrid
-  }
+    return newGrid;
+  };
 
   const updateGridAndCheckWin = (boxNumber) => {
-    if (grid[boxNumber] || win) {
+    if (grid[boxNumber] || status.won) {
       return;
     }
-    updateArray(boxNumber)
+    updateArray(boxNumber);
     setGrid(updateArray(boxNumber));
     checkWin(updateArray(boxNumber));
   };
@@ -61,20 +64,24 @@ function App() {
       [2, 4, 6],
     ];
     const isWin = winConditions.some((condition) => {
-      console.log(`condition: ${condition}`);
       const [a, b, c] = condition;
-      console.log(`a: ${a}, b: ${b}, c: ${c}`);
       return (
         newGrid[a] && newGrid[a] === newGrid[b] && newGrid[b] === newGrid[c]
       );
     });
     if (isWin) {
-      setWin(true);
+      setStatus({ ...status, won: true });
+    }
+    if (!isWin) {
+      setAttempts((prevCount) => prevCount + 1);
+      if (attempts === 9) {
+        setStatus({ ...status, lost: true });
+      }
     }
   };
 
   const displayWin = () => {
-    if (win) {
+    if (status.won) {
       return (
         <Card
           variant="outlined"
@@ -89,6 +96,28 @@ function App() {
           <CardContent>
             <Typography variant="h5" m={5}>
               {"You Win!"}
+            </Typography>
+          </CardContent>
+        </Card>
+      );
+    }
+  };
+  const displayLost = () => {
+    if (status.lost) {
+      return (
+        <Card
+          variant="outlined"
+          m={5}
+          sx={{
+            minWidth: 100,
+            marginTop: 5,
+            backgroundColor: "red",
+            borderRadius: "5%",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h5" m={5}>
+              {"You Loose 😟😟😢"}
             </Typography>
           </CardContent>
         </Card>
@@ -126,6 +155,7 @@ function App() {
       ))}
 
       {displayWin()}
+      {displayLost()}
     </div>
   );
 }
