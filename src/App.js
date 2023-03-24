@@ -15,7 +15,14 @@ function App() {
     lost: false,
   });
   const [attempts, setAttempts] = useState(1);
-  
+  const [backgroundColor, setBackgroundColor] = useState("white");
+
+  const handleWinBackgroundColor = () => {
+      setBackgroundColor("gold");
+  };
+  const handleLoseBackgroundColor = () => {
+    setBackgroundColor("grey")
+  }
 
   //call both getLetter and updateCounter at the same level from updateGridAndCheckWin
   const getLetter = () => {
@@ -71,11 +78,13 @@ function App() {
     });
     if (isWin) {
       setStatus({ ...status, won: true });
+      handleWinBackgroundColor();
     }
     if (!isWin) {
       setAttempts((prevCount) => prevCount + 1);
       if (attempts === 9) {
         setStatus({ ...status, lost: true });
+        handleLoseBackgroundColor()
       }
     }
   };
@@ -125,7 +134,7 @@ function App() {
     }
   };
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor }}>
       <Typography variant="h2" mb={4}>
         Tic Tac Toe
       </Typography>
