@@ -14,68 +14,35 @@ function App() {
   const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
   //const status = ["playing", "won", "lost"];
 
-  //split into 2 functions: getLetter, updateCounter
-  //call both at the same level from updateGridAndCheckWin
-  const updateAndGetLetter = () => {
+  //call both getLetter and updateCounter at the same level from updateGridAndCheckWin
+  const getLetter = () => {
     let letter;
+    updateCounter()
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
-    setCounter(counter + 1);
     return letter;
   };
+
+  const updateCounter = () => {
+    setCounter(prevCount => prevCount + 1)
+  }
+
+  const updateArray = (boxNumber) => {
+    const newGrid = [
+      ...grid.slice(0, boxNumber),
+      getLetter(),
+      ...grid.slice(boxNumber + 1),
+    ];
+    return newGrid
+  }
 
   const updateGridAndCheckWin = (boxNumber) => {
     if (grid[boxNumber] || win) {
       return;
     }
-    //make a helper function called updateArray and use it here. Put the function outside of the component
-    const newGrid = [
-      ...grid.slice(0, boxNumber),
-      updateAndGetLetter(),
-      ...grid.slice(boxNumber + 1),
-    ];
-    setGrid(newGrid);
-    checkWin(newGrid);
+    updateArray(boxNumber)
+    setGrid(updateArray(boxNumber));
+    checkWin(updateArray(boxNumber));
   };
-
-  // const checkWin = (newGrid) => {
-  //   let isWin = false;
-  //   // check rows
-  //   for (let i = 0; i < 9; i += 3) {
-  //     if (newGrid[i] === "X" || newGrid[i] === "O") {
-  //       if (
-  //         newGrid[i] === newGrid[i + 1] &&
-  //         newGrid[i + 1] === newGrid[i + 2]
-  //       ) {
-  //         isWin = true;
-  //       }
-  //     }
-  //   }
-  //   //check columns
-  //   for (let i = 0; i <= 2; i += 1) {
-  //     if (newGrid[i] === "X" || newGrid[i] === "O") {
-  //       if (
-  //         newGrid[i] === newGrid[i + 3] &&
-  //         newGrid[i + 3] === newGrid[i + 6]
-  //       ) {
-  //         isWin = true;
-  //       }
-  //     }
-  //   }
-  //   //check diagonals
-  //   if (newGrid[0] === "X" || newGrid[0] === "O") {
-  //     if (newGrid[0] === newGrid[4] && newGrid[4] === newGrid[8]) {
-  //       isWin = true;
-  //     }
-  //   }
-  //   if (newGrid[2] === "X" || newGrid[2] === "O") {
-  //     if (newGrid[2] === newGrid[4] && newGrid[4] === newGrid[6]) {
-  //       isWin = true;
-  //     }
-  //   }
-  //   if (isWin) {
-  //     setWin(true);
-  //   }
-  // };
 
   const checkWin = (newGrid) => {
     const winConditions = [
@@ -93,17 +60,14 @@ function App() {
       [0, 4, 8],
       [2, 4, 6],
     ];
-    //.some() returns true if any of the conditions are met
     const isWin = winConditions.some((condition) => {
       console.log(`condition: ${condition}`);
-      //destructuring each element from within each condition array
       const [a, b, c] = condition;
       console.log(`a: ${a}, b: ${b}, c: ${c}`);
       return (
         newGrid[a] && newGrid[a] === newGrid[b] && newGrid[b] === newGrid[c]
       );
     });
-
     if (isWin) {
       setWin(true);
     }
