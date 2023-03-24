@@ -12,6 +12,7 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [win, setWin] = useState(false);
   const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
+  //const status = ["playing", "won", "lost"];
 
   //split into 2 functions: getLetter, updateCounter
   //call both at the same level from updateGridAndCheckWin
@@ -35,46 +36,41 @@ function App() {
     setGrid(newGrid);
     checkWin(newGrid);
   };
-  //refactor
+
   const checkWin = (newGrid) => {
     let isWin = false;
-    //rows
-    switch (true) {
-      case (newGrid[0] === "X" && newGrid[1] === "X" && newGrid[2] === "X") ||
-        (newGrid[0] === "O" && newGrid[1] === "O" && newGrid[2] === "O"):
+    // check rows
+    for (let i = 0; i < 9; i += 3) {
+      if (newGrid[i] === "X" || newGrid[i] === "O") {
+        if (
+          newGrid[i] === newGrid[i + 1] &&
+          newGrid[i + 1] === newGrid[i + 2]
+        ) {
+          isWin = true;
+        }
+      }
+    }
+    //check columns
+    for (let i = 0; i <= 2; i += 1) {
+      if (newGrid[i] === "X" || newGrid[i] === "O") {
+        if (
+          newGrid[i] === newGrid[i + 3] &&
+          newGrid[i + 3] === newGrid[i + 6]
+        ) {
+          isWin = true;
+        }
+      }
+    }
+    //check diagonals
+    if (newGrid[0] === "X" || newGrid[0] === "O") {
+      if (newGrid[0] === newGrid[4] && newGrid[4] === newGrid[8]) {
         isWin = true;
-        break;
-      case (newGrid[3] === "X" && newGrid[4] === "X" && newGrid[5] === "X") ||
-        (newGrid[3] === "O" && newGrid[4] === "O" && newGrid[5] === "O"):
+      }
+    }
+    if (newGrid[2] === "X" || newGrid[2] === "O") {
+      if (newGrid[2] === newGrid[4] && newGrid[4] === newGrid[6]) {
         isWin = true;
-        break;
-      case (newGrid[6] === "X" && newGrid[7] === "X" && newGrid[8] === "X") ||
-        (newGrid[6] === "O" && newGrid[7] === "O" && newGrid[8] === "O"):
-        isWin = true;
-        break;
-      //columns
-      case (newGrid[0] === "X" && newGrid[3] === "X" && newGrid[6] === "X") ||
-        (newGrid[0] === "O" && newGrid[3] === "O" && newGrid[6] === "O"):
-        isWin = true;
-        break;
-      case (newGrid[1] === "X" && newGrid[4] === "X" && newGrid[7] === "X") ||
-        (newGrid[1] === "O" && newGrid[4] === "O" && newGrid[7] === "O"):
-        isWin = true;
-        break;
-      case (newGrid[2] === "X" && newGrid[5] === "X" && newGrid[8] === "X") ||
-        (newGrid[2] === "O" && newGrid[5] === "O" && newGrid[8] === "O"):
-        isWin = true;
-        break;
-      //diagonal
-      case (newGrid[0] === "X" && newGrid[4] === "X" && newGrid[8] === "X") ||
-        (newGrid[0] === "O" && newGrid[4] === "O" && newGrid[8] === "O"):
-        isWin = true;
-        break;
-      case (newGrid[2] === "X" && newGrid[4] === "X" && newGrid[6] === "X") ||
-        (newGrid[2] === "O" && newGrid[4] === "O" && newGrid[6] === "O"):
-        isWin = true;
-        break;
-      default:
+      }
     }
     if (isWin) {
       setWin(true);
@@ -113,15 +109,20 @@ function App() {
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
-      ].map((nums) => (
+      ].map((nums, index) => (
         <ButtonGroup
           disableElevation
           variant="contained"
           color="info"
           sx={{ columnGap: 1, marginBottom: 1 }}
+          key={index}
         >
-          {nums.map((num) => (
-            <Button sx={{ p: 3 }} onClick={() => updateGridAndCheckWin(num)}>
+          {nums.map((num, index) => (
+            <Button
+              sx={{ p: 3 }}
+              onClick={() => updateGridAndCheckWin(num)}
+              key={index}
+            >
               {grid[num]}
             </Button>
           ))}
