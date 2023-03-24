@@ -11,11 +11,11 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
   const [status, setStatus] = useState({
-    playing: false,
     won: false,
     lost: false,
   });
   const [attempts, setAttempts] = useState(1);
+  
 
   //call both getLetter and updateCounter at the same level from updateGridAndCheckWin
   const getLetter = () => {
