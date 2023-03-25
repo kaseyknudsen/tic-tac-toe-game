@@ -15,14 +15,12 @@ function App() {
     lost: false,
   });
   const [attempts, setAttempts] = useState(1);
-  const [backgroundColor, setBackgroundColor] = useState("rgb(224, 224, 224)");
 
-  const handleWinBackgroundColor = () => {
-    setBackgroundColor("gold");
-  };
-  const handleLoseBackgroundColor = () => {
-    setBackgroundColor("rgb(50, 78, 168)");
-  };
+  const backgroundColor = status.won
+    ? "gold"
+    : status.lost
+    ? "#eab676"
+    : "#eeeee4";
 
   //call both getLetter and updateCounter at the same level from updateGridAndCheckWin
   const getLetter = () => {
@@ -78,13 +76,10 @@ function App() {
     });
     if (isWin) {
       setStatus({ ...status, won: true });
-      handleWinBackgroundColor();
-    }
-    if (!isWin) {
+    } else {
       setAttempts((prevCount) => prevCount + 1);
       if (attempts === 9) {
         setStatus({ ...status, lost: true });
-        handleLoseBackgroundColor();
       }
     }
   };
@@ -123,7 +118,6 @@ function App() {
             backgroundColor: "red",
             borderRadius: "5%",
           }}
-   
         >
           <CardContent>
             <Typography variant="h5" m={5}>
