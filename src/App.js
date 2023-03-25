@@ -7,6 +7,10 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
+const updatedArray = (array, index, value) => {
+  return [...array.slice(0, index), value, ...array.slice(index + 1)];
+};
+
 function App() {
   const [counter, setCounter] = useState(0);
   const [grid, setGrid] = useState(["", "", "", "", "", "", "", "", ""]);
@@ -25,7 +29,6 @@ function App() {
   //call both getLetter and updateCounter at the same level from updateGridAndCheckWin
   const getLetter = () => {
     let letter;
-    updateCounter();
     counter % 2 === 0 ? (letter = "X") : (letter = "O");
     return letter;
   };
@@ -34,22 +37,14 @@ function App() {
     setCounter((prevCount) => prevCount + 1);
   };
 
-  const updateArray = (boxNumber) => {
-    const newGrid = [
-      ...grid.slice(0, boxNumber),
-      getLetter(),
-      ...grid.slice(boxNumber + 1),
-    ];
-    return newGrid;
-  };
-
   const updateGridAndCheckWin = (boxNumber) => {
     if (grid[boxNumber] || status.won) {
       return;
     }
-    updateArray(boxNumber);
-    setGrid(updateArray(boxNumber));
-    checkWin(updateArray(boxNumber));
+    updateCounter();
+    const newGrid = updatedArray(grid, boxNumber, getLetter())
+    setGrid(newGrid);
+    checkWin(newGrid);
   };
 
   const checkWin = (newGrid) => {
